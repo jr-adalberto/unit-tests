@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @Transactional
-public class MensagemREpositoryIT {
+public class MensagemRepositoryIT {
 
     @Autowired
     private MensagemRepository mensagemRepository;
@@ -47,6 +47,25 @@ public class MensagemREpositoryIT {
     }
 
     @Test
+    void devePermitirBuscarMensagem() {
+        // Arrange
+        var id = UUID.randomUUID();
+        var mensagem = gerarMensagem();
+        mensagem.setId(id);
+        registrarMensagem(mensagem);
+
+        // Act
+        var mensagemOptional = mensagemRepository.findById(id);
+
+        // Assert
+        assertThat(mensagemOptional).isPresent();
+        mensagemOptional.ifPresent(mensagemRecebida -> {
+            assertThat(mensagemRecebida.getId()).isEqualTo(id);
+            assertThat(mensagemRecebida.getConteudo()).isEqualTo(mensagem.getConteudo());
+        });
+    }
+
+    @Test
     void devePermitirRemoverMensagem() {
         fail("teste não implementado.");
     }
@@ -56,15 +75,15 @@ public class MensagemREpositoryIT {
         fail("teste não implementado.");
     }
 
-    @Test
-    void devePermitirBuscarMensagem() {
-        fail("teste não implementado.");
-    }
 
     private Mensagem gerarMensagem() {
         return Mensagem.builder()
                 .usuario("Mario")
                 .conteudo("conteúdo da mensagem")
                 .build();
+    }
+
+    private Mensagem registrarMensagem(Mensagem mensagem) {
+        return mensagemRepository.save(mensagem);
     }
 }
