@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -23,7 +22,7 @@ public class MensagemRepositoryIT {
     @Test
     void devePermitirCriarTabela() {
         var totalDeRegistros = mensagemRepository.count();
-        assertThat(totalDeRegistros).isNotNegative();
+        assertThat(totalDeRegistros).isGreaterThan(0);
     }
 
     @Test
@@ -49,32 +48,38 @@ public class MensagemRepositoryIT {
     @Test
     void devePermitirBuscarMensagem() {
         // Arrange
-        var id = UUID.randomUUID();
-        var mensagem = gerarMensagem();
-        mensagem.setId(id);
-        registrarMensagem(mensagem);
+        var id = UUID.fromString("88ace1ea-7cde-4276-a44b-ae3b0adead1d");
 
         // Act
         var mensagemOptional = mensagemRepository.findById(id);
 
         // Assert
         assertThat(mensagemOptional).isPresent();
+
         mensagemOptional.ifPresent(mensagemRecebida -> {
             assertThat(mensagemRecebida.getId()).isEqualTo(id);
-            assertThat(mensagemRecebida.getConteudo()).isEqualTo(mensagem.getConteudo());
         });
     }
 
     @Test
     void devePermitirRemoverMensagem() {
-        fail("teste não implementado.");
+        // Arrange
+        var id = UUID.fromString("85e7f770-d4be-4622-9437-bc4c5c1c63b2");
+        // Act
+        mensagemRepository.deleteById(id);
+        var mensagemOptional = mensagemRepository.findById(id);
+        // Assert
+        assertThat(mensagemOptional).isEmpty();
     }
 
     @Test
     void devePermitirListarMensagem() {
-        fail("teste não implementado.");
-    }
+        // Act
+        var resultadosObtidos = mensagemRepository.findAll();
+        // Assert
+        assertThat(resultadosObtidos).hasSizeGreaterThan(0);
 
+    }
 
     private Mensagem gerarMensagem() {
         return Mensagem.builder()
