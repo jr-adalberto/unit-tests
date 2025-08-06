@@ -37,11 +37,9 @@ public class MensagemRepositoryTest {
     void devePermitirResgitrarMensagem() {
         // Arrange
         var mensagem = gerarMensagem();
-
         when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagem);
         // Act
         var mensagemArmazenada = mensagemRepository.save(mensagem);
-
         // Assert
         assertThat(mensagemArmazenada)
                 .isNotNull()
@@ -55,18 +53,14 @@ public class MensagemRepositoryTest {
         var id = UUID.randomUUID();
         var mensagem = gerarMensagem();
         mensagem.setId(id);
-
         when(mensagemRepository.findById(any(UUID.class)))
                 .thenReturn(Optional.of(mensagem));
-
         // Act
         var mensagemOptional = mensagemRepository.findById(id);
-
         // Assert
         assertThat(mensagemOptional)
                 .isPresent()
                 .containsSame(mensagem);
-
         mensagemOptional.ifPresent(mensagemRecebida -> {
             assertThat(mensagemRecebida.getId()).isEqualTo(mensagem.getId());
             assertThat(mensagemRecebida.getConteudo()).isEqualTo(mensagem.getConteudo());
@@ -79,10 +73,8 @@ public class MensagemRepositoryTest {
         // Arrange
         var id = UUID.randomUUID();
         doNothing().when(mensagemRepository).deleteById(any(UUID.class));
-
         // Act
         mensagemRepository.deleteById(id);
-
         // Assert
         verify(mensagemRepository, times(1)).deleteById(any(UUID.class));
     }
@@ -96,10 +88,8 @@ public class MensagemRepositoryTest {
                 mensagem1,
                 mensagem2);
         when(mensagemRepository.findAll()).thenReturn(mensagemList);
-
         // Act
         var mensagensRecebidas = mensagemRepository.findAll();
-
         // Assert
         assertThat(mensagensRecebidas)
                 .hasSize(2)

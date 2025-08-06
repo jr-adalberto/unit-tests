@@ -31,10 +31,8 @@ public class MensagemRepositoryIT {
         var id = UUID.randomUUID();
         var mensagem = gerarMensagem();
         mensagem.setId(id);
-
         // Act
         var mensagemRecebida = mensagemRepository.save(mensagem);
-
         // Assert
         assertThat(mensagemRecebida)
                 .isInstanceOf(Mensagem.class)
@@ -49,10 +47,8 @@ public class MensagemRepositoryIT {
     void devePermitirBuscarMensagem() {
         // Arrange
         var id = UUID.fromString("88ace1ea-7cde-4276-a44b-ae3b0adead1d");
-
         // Act
         var mensagemOptional = mensagemRepository.findById(id);
-
         // Assert
         assertThat(mensagemOptional).isPresent();
 
