@@ -60,17 +60,27 @@ public class MensagemServiceIT {
         var id = UUID.fromString("10b75e75-2685-405a-bcdf-bdd4410381ba");
         assertThatThrownBy(() -> mensagemService.buscarMensagem(id))
                 .isInstanceOf(MensagemNotFoundException.class)
-                .hasMessage("Mensagem não apresentada");
+                .hasMessage("Mensagem não encontrada.");
     }
 
     @Test
     void devePermitirAlterarMensagem() {
-        fail("teste não implementado");
+        // Arrange
+        var id = UUID.fromString("85e7f770-d4be-4622-9437-bc4c5c1c63b2");
+        var mensagemAtualizada = MensagemHelper.gerarMensagem();
+        mensagemAtualizada.setId(id);
+        // Act
+        var mensagemObtida = mensagemService.alterarMensagem(id, mensagemAtualizada);
+        // Arrange
+        assertThat(mensagemObtida.getId()).isEqualTo(id);
+        assertThat(mensagemObtida.getConteudo()).isEqualTo(mensagemAtualizada.getConteudo());
+
+        assertThat(mensagemObtida.getUsuario()).isNotEqualTo(mensagemAtualizada.getUsuario());
     }
 
     @Test
     void deveGerarExcecao_QuandoAlterarMensagem_IdNaoExiste() {
-        fail("teste não implementado");
+        var id = UUID.fromString("97a1de27-fc66-498c-968a-be7d644c3db0");
     }
 
     @Test
