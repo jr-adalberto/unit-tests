@@ -1,6 +1,7 @@
 package br.api.tests.repository;
 
 import br.api.tests.model.Mensagem;
+import br.api.tests.utils.MensagemHelper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @Transactional
-public class MensagemRepositoryIT {
+class MensagemRepositoryIT {
 
     @Autowired
     private MensagemRepository mensagemRepository;
@@ -22,14 +23,14 @@ public class MensagemRepositoryIT {
     @Test
     void devePermitirCriarTabela() {
         var totalDeRegistros = mensagemRepository.count();
-        assertThat(totalDeRegistros).isGreaterThan(0);
+        assertThat(totalDeRegistros).isPositive();
     }
 
     @Test
     void devePermitirRegistrarMensagem() {
         // Arrange
         var id = UUID.randomUUID();
-        var mensagem = gerarMensagem();
+        var mensagem = MensagemHelper.gerarMensagem();
         mensagem.setId(id);
         // Act
         var mensagemRecebida = mensagemRepository.save(mensagem);
@@ -77,14 +78,4 @@ public class MensagemRepositoryIT {
 
     }
 
-    private Mensagem gerarMensagem() {
-        return Mensagem.builder()
-                .usuario("Mario")
-                .conteudo("conteúdo da mensagem")
-                .build();
-    }
-
-    private Mensagem registrarMensagem(Mensagem mensagem) {
-        return mensagemRepository.save(mensagem);
-    }
 }

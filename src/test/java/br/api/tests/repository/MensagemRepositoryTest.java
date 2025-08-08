@@ -1,6 +1,7 @@
 package br.api.tests.repository;
 
 import br.api.tests.model.Mensagem;
+import br.api.tests.utils.MensagemHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class MensagemRepositoryTest {
+class MensagemRepositoryTest {
 
 
     @Mock
@@ -36,7 +37,7 @@ public class MensagemRepositoryTest {
     @Test
     void devePermitirResgitrarMensagem() {
         // Arrange
-        var mensagem = gerarMensagem();
+        var mensagem = MensagemHelper.gerarMensagem();
         when(mensagemRepository.save(any(Mensagem.class))).thenReturn(mensagem);
         // Act
         var mensagemArmazenada = mensagemRepository.save(mensagem);
@@ -51,7 +52,7 @@ public class MensagemRepositoryTest {
     void devePermitirBuscarMensagem() {
         // Arrange
         var id = UUID.randomUUID();
-        var mensagem = gerarMensagem();
+        var mensagem = MensagemHelper.gerarMensagem();
         mensagem.setId(id);
         when(mensagemRepository.findById(any(UUID.class)))
                 .thenReturn(Optional.of(mensagem));
@@ -82,8 +83,8 @@ public class MensagemRepositoryTest {
     @Test
     void devePermitirListarMensagens() {
         // Arrange
-        var mensagem1 = gerarMensagem();
-        var mensagem2 = gerarMensagem();
+        var mensagem1 = MensagemHelper.gerarMensagem();
+        var mensagem2 = MensagemHelper.gerarMensagem();
         var mensagemList = Arrays.asList(
                 mensagem1,
                 mensagem2);
@@ -96,14 +97,5 @@ public class MensagemRepositoryTest {
                 .containsExactlyInAnyOrder(mensagem1, mensagem2);
         verify(mensagemRepository, times(1)).findAll();
     }
-
-    private Mensagem gerarMensagem() {
-        return Mensagem.builder()
-                .usuario("Mario")
-                .conteudo("conteúdo da mensagem")
-                .build();
-    }
-
-
 
 }

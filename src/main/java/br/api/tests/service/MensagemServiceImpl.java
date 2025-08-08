@@ -4,6 +4,8 @@ import br.api.tests.exception.MensagemNotFoundException;
 import br.api.tests.model.Mensagem;
 import br.api.tests.repository.MensagemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -38,6 +40,18 @@ public class MensagemServiceImpl implements MensagemService {
 
     @Override
     public boolean removerMensagem(UUID id) {
-        return false;
+        var mensagem = buscarMensagem(id);
+        mensagemRepository.deleteById(id);
+        return true;
     }
+
+
+    private String semNada = "";
+
+    @Override
+    public Page<Mensagem> listarMensagem(Pageable pageable) {
+        return mensagemRepository.listarMensagens(pageable);
+    }
+
+
 }
