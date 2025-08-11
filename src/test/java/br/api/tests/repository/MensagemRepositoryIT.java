@@ -3,6 +3,7 @@ package br.api.tests.repository;
 import br.api.tests.model.Mensagem;
 import br.api.tests.utils.MensagemHelper;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -20,62 +21,77 @@ class MensagemRepositoryIT {
     @Autowired
     private MensagemRepository mensagemRepository;
 
-    @Test
-    void devePermitirCriarTabela() {
-        var totalDeRegistros = mensagemRepository.count();
-        assertThat(totalDeRegistros).isPositive();
+    @Nested
+    class CriarTabela {
+        @Test
+        void devePermitirCriarTabela() {
+            var totalDeRegistros = mensagemRepository.count();
+            assertThat(totalDeRegistros).isPositive();
+        }
     }
 
-    @Test
-    void devePermitirRegistrarMensagem() {
-        // Arrange
-        var id = UUID.randomUUID();
-        var mensagem = MensagemHelper.gerarMensagem();
-        mensagem.setId(id);
-        // Act
-        var mensagemRecebida = mensagemRepository.save(mensagem);
-        // Assert
-        assertThat(mensagemRecebida)
-                .isInstanceOf(Mensagem.class)
-                .isNotNull();
-        assertThat(mensagemRecebida.getId()).isEqualTo(id);
-        assertThat(mensagemRecebida.getConteudo()).isEqualTo(mensagem.getConteudo());
-        assertThat(mensagemRecebida.getUsuario()).isEqualTo(mensagem.getUsuario());
-
-    }
-
-    @Test
-    void devePermitirBuscarMensagem() {
-        // Arrange
-        var id = UUID.fromString("88ace1ea-7cde-4276-a44b-ae3b0adead1d");
-        // Act
-        var mensagemOptional = mensagemRepository.findById(id);
-        // Assert
-        assertThat(mensagemOptional).isPresent();
-
-        mensagemOptional.ifPresent(mensagemRecebida -> {
+    @Nested
+    class RegistrarMensagem {
+        @Test
+        void devePermitirRegistrarMensagem() {
+            // Arrange
+            var id = UUID.randomUUID();
+            var mensagem = MensagemHelper.gerarMensagem();
+            mensagem.setId(id);
+            // Act
+            var mensagemRecebida = mensagemRepository.save(mensagem);
+            // Assert
+            assertThat(mensagemRecebida)
+                    .isInstanceOf(Mensagem.class)
+                    .isNotNull();
             assertThat(mensagemRecebida.getId()).isEqualTo(id);
-        });
+            assertThat(mensagemRecebida.getConteudo()).isEqualTo(mensagem.getConteudo());
+            assertThat(mensagemRecebida.getUsuario()).isEqualTo(mensagem.getUsuario());
+
+        }
     }
 
-    @Test
-    void devePermitirRemoverMensagem() {
-        // Arrange
-        var id = UUID.fromString("85e7f770-d4be-4622-9437-bc4c5c1c63b2");
-        // Act
-        mensagemRepository.deleteById(id);
-        var mensagemOptional = mensagemRepository.findById(id);
-        // Assert
-        assertThat(mensagemOptional).isEmpty();
+    @Nested
+    class BuscarMensagem {
+        @Test
+        void devePermitirBuscarMensagem() {
+            // Arrange
+            var id = UUID.fromString("88ace1ea-7cde-4276-a44b-ae3b0adead1d");
+            // Act
+            var mensagemOptional = mensagemRepository.findById(id);
+            // Assert
+            assertThat(mensagemOptional).isPresent();
+
+            mensagemOptional.ifPresent(mensagemRecebida -> {
+                assertThat(mensagemRecebida.getId()).isEqualTo(id);
+            });
+        }
     }
 
-    @Test
-    void devePermitirListarMensagem() {
-        // Act
-        var resultadosObtidos = mensagemRepository.findAll();
-        // Assert
-        assertThat(resultadosObtidos).hasSizeGreaterThan(0);
-
+    @Nested
+    class RemoverMensagem {
+        @Test
+        void devePermitirRemoverMensagem() {
+            // Arrange
+            var id = UUID.fromString("85e7f770-d4be-4622-9437-bc4c5c1c63b2");
+            // Act
+            mensagemRepository.deleteById(id);
+            var mensagemOptional = mensagemRepository.findById(id);
+            // Assert
+            assertThat(mensagemOptional).isEmpty();
+        }
     }
+
+    @Nested
+    class ListarMensagem {
+        @Test
+        void devePermitirListarMensagem() {
+            // Act
+            var resultadosObtidos = mensagemRepository.findAll();
+            // Assert
+            assertThat(resultadosObtidos).hasSizeGreaterThan(0);
+        }
+    }
+
 
 }
