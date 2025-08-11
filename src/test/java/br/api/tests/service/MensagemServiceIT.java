@@ -80,7 +80,14 @@ public class MensagemServiceIT {
 
     @Test
     void deveGerarExcecao_QuandoAlterarMensagem_IdNaoExiste() {
-        var id = UUID.fromString("97a1de27-fc66-498c-968a-be7d644c3db0");
+        // Arrange
+        var id = UUID.fromString("44a8d226-2fcf-48d0-9985-c58d263579c4");
+        var mensagemAtualizada = MensagemHelper.gerarMensagem();
+        mensagemAtualizada.setId(id);
+        // Assert
+        assertThatThrownBy(() -> mensagemService.alterarMensagem(id, mensagemAtualizada))
+                .isInstanceOf(MensagemNotFoundException.class)
+                .hasMessage("Mensagem não encontrada.");
     }
 
     @Test
