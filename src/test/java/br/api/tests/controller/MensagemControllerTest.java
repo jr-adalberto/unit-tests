@@ -13,18 +13,25 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Collections;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 public class MensagemControllerTest {
 
@@ -40,6 +47,10 @@ public class MensagemControllerTest {
         openMocks = MockitoAnnotations.openMocks(this);
         MensagemController mensagemController = new MensagemController(mensagemService);
         mockMvc = MockMvcBuilders.standaloneSetup(mensagemController)
+                .addFilter((request, response, chain) -> {
+                    response.setCharacterEncoding("UTF-8");
+                    chain.doFilter(request, response);
+                })
                 .build();
     }
 
@@ -123,17 +134,18 @@ public class MensagemControllerTest {
             mockMvc.perform(put("/mensagens/{id}", id)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(asJsonString(mensagem)))
+                    // para testes     .andDo(print())
                     .andExpect(status().isOk());
             verify(mensagemService, times(1))
                     .alterarMensagem(any(UUID.class), any(Mensagem.class));
         }
 
         @Test
-        void deveGerarExecao_QuandoAlterarMensagem_IdNaoExiste() throws Exception {
+        void deveGerarExcecao_QuandoAlterarMensagem_IdDaMensagemNovaApresentaValorDiferente() throws Exception {
             // Arrange
             var id = UUID.fromString("7fc506a7-15a0-4b72-a752-2005e59c6dc2");
             var mensagem = MensagemHelper.gerarMensagem();
-            mensagem.setId(id);
+            mensagem.setId(UUID.fromString("27bc03e7-1fd9-455a-87ff-ca48e7bf9e0b"));
             var conteudoExcecao = "Mensagem atualizada não apresenta o ID correto.";
             when(mensagemService.alterarMensagem(any(UUID.class), any(Mensagem.class)))
                     .thenThrow(new MensagemNotFoundException(conteudoExcecao));
@@ -148,8 +160,21 @@ public class MensagemControllerTest {
         }
 
         @Test
-        void deveGerarExecao_QuandoAlterarMensagem_IdDaMensagemNovaApresentaValorDiferente() {
-            fail("Not yet implemented");
+        void deveGerarExecao_QuandoAlterarMensagem_IdNaoExiste() throws Exception {
+            // Arrange
+            var id = UUID.fromString("a80a08d4-39f5-4f2a-997c-c5252133a4fe");
+            var mensagem = MensagemHelper.gerarMensagem();
+            mensagem.setId(id);
+            var conteudoExcecao = "mensagem não encontrada.";
+            when(mensagemService.alterarMensagem(any(UUID.class), any(Mensagem.class)))
+                    .thenThrow(MensagemNotFoundException.class);
+            // Act & Assert
+            mockMvc.perform(put("/mensagens/{id}", id)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(MensagemHelper.gerarMensagem())))
+                    .andExpect(status().isBadRequest());
+            verify(mensagemService, times(1))
+                    .alterarMensagem(any(UUID.class), any(Mensagem.class));
         }
 
         @Test
@@ -170,28 +195,61 @@ public class MensagemControllerTest {
     @Nested
     class RemoverMensagem {
         @Test
-        void devePermitirRemoverMensagem() {
-            fail("Not yet implemented");
+        void devePermitirRemoverMensagem() throws Exception {
+            // Arrange
+            var id = UUID.fromString("a2674580-22e3-49e0-9dc1-0bc5a8f193e0");
+            when(mensagemService.removerMensagem(any(UUID.class)))
+                    .thenReturn(true);
+            // Act & Assert
+            mockMvc.perform(delete("/mensagens/{id}", id))
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("Mensagem removida com sucesso."));
+            verify(mensagemService, times(1)).removerMensagem(any(UUID.class));
         }
 
         @Test
-        void deveGerarExecao_QuandoRemoverMensagem_IdNaoExiste() {
-            fail("Not yet implemented");
+        void deveGerarExecao_QuandoRemoverMensagem_IdNaoExiste() throws Exception {
+            // Arrange
+            var id = UUID.fromString("0aeea15c-aae9-492d-9298-aaf3222f9b55");
+            var mensagemDaExcecao = "Mensagem não encontrada.";
+            when(mensagemService.removerMensagem(id)).thenThrow(new MensagemNotFoundException(mensagemDaExcecao));
+            // Act & Assert
+            mockMvc.perform(delete("/mensagens/{id}", id))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().string(mensagemDaExcecao));
+            verify(mensagemService, times(1)).removerMensagem(any(UUID.class));
         }
     }
 
     @Nested
     class ListarMensagens {
         @Test
-        void devePermitirListarMensagens() {
-            fail("Not yet implemented");
+        void devePermitirListarMensagens() throws Exception {
+            var mensagem = MensagemHelper.gerarMensagemCompleta();
+            Pageable pageable = PageRequest.of(0, 10);
+            Page<Mensagem> page = new PageImpl<>(Collections.singletonList(mensagem), pageable, 1L);
+
+            when(mensagemService.listasMensagens(any(Pageable.class)))
+                    .thenReturn(page);
+
+            mockMvc.perform(get("/mensagens")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.content[0].id").value(mensagem.getId().toString()))
+                    .andExpect(jsonPath("$.content[0].conteudo").value(mensagem.getConteudo()))
+                    .andExpect(jsonPath("$.content[0].usuario").value(mensagem.getUsuario()))
+                    .andExpect(jsonPath("$.content[0].dataCriacao").exists())
+                    .andExpect(jsonPath("$.content[0].gostei").exists());
+
+            verify(mensagemService, times(1))
+                    .listasMensagens(any(Pageable.class));
         }
     }
 
-    private static String asJsonString(final Object obj) throws JsonProcessingException {
+    static String asJsonString(final Object obj) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         return objectMapper.writeValueAsString(obj);
     }
-
 }
+
