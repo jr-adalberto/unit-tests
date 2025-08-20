@@ -45,11 +45,16 @@ public class MensagemServiceImpl implements MensagemService {
         return true;
     }
 
+    @Override
+    public Mensagem incrementarGostei(UUID id) {
+        return null;
+    }
+
 
     private String semNada = "";
 
     @Override
-    public Page<Mensagem> listarMensagem(Pageable pageable) {
+    public Page<Mensagem> listasMensagens(Pageable pageable) {
         return mensagemRepository.listarMensagens(pageable);
     }
 
