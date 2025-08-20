@@ -1,9 +1,10 @@
 package br.api.tests.service;
 
 import br.api.tests.model.Mensagem;
-import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.UUID;
 
 public interface MensagemService {
 
@@ -15,6 +16,8 @@ public interface MensagemService {
 
     boolean removerMensagem(UUID id);
 
-    Page<Mensagem> listarMensagem(Pageable pageable);
+    Mensagem incrementarGostei(UUID id);
+
+    Page<Mensagem> listasMensagens(Pageable pageable);
 
 }

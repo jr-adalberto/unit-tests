@@ -141,7 +141,7 @@ public class MensagemServiceIT {
         @Test
         void devePermitirListarMensagem() {
             // Arrange
-            Page<Mensagem> listaMensagens = mensagemService.listarMensagem(Pageable.unpaged());
+            Page<Mensagem> listaMensagens = mensagemService.listasMensagens(Pageable.unpaged());
             // Assert
             assertThat(listaMensagens).hasSize(3).allSatisfy(mensagemObtida -> {
                 assertThat(mensagemObtida).isNotNull();

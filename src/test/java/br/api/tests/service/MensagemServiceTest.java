@@ -204,7 +204,7 @@ class MensagemServiceTest {
                     .thenReturn(listaMensagem);
 
             // Act
-            var resultadoObtido = mensagemService.listarMensagem(Pageable.unpaged());
+            var resultadoObtido = mensagemService.listasMensagens(Pageable.unpaged());
 
             // Assert
             assertThat(resultadoObtido).hasSize(2);
