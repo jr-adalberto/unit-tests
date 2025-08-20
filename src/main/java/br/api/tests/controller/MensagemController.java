@@ -4,6 +4,10 @@ import br.api.tests.exception.MensagemNotFoundException;
 import br.api.tests.model.Mensagem;
 import br.api.tests.service.MensagemService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +19,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("mensagens")
 @RequiredArgsConstructor
+@Slf4j
 public class MensagemController {
 
 
@@ -40,6 +45,18 @@ public class MensagemController {
         }
     }
 
+    @GetMapping(
+            value = "",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<Mensagem>> listarMensagens(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        log.info("requisição para listar mensagens foi efetuada: Página={}, Tamanho={}", page, size);
+        Page<Mensagem> mensagens = mensagemService.listasMensagens(pageable);
+        return new ResponseEntity<>(mensagens, HttpStatus.OK);
+    }
+
     @SuppressWarnings({"checkstyle:Indentation", "checkstyle:MissingJavadocMethod"})
     @PutMapping(value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -51,6 +68,19 @@ public class MensagemController {
             return new ResponseEntity<>(mensagemAlterada, HttpStatus.OK);
         } catch (MensagemNotFoundException mensagemNotFoundException) {
             return new ResponseEntity<>("Mensagem atualizada não apresenta o ID correto.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> removerMensagem(@PathVariable String id) {
+        var uuid = UUID.fromString(id);
+        try {
+            mensagemService.removerMensagem(uuid);
+            return new ResponseEntity<>("Mensagem removida com sucesso.", HttpStatus.OK);
+        } catch (MensagemNotFoundException mensagemNotFoundException) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(mensagemNotFoundException.getMessage());
         }
     }
 }
