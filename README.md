@@ -12,7 +12,7 @@
 
 ## 📝 Sobre o Projeto
 
-Este projeto foi desenvolvido com o objetivo de **explorar e aplicar testes unitários em uma aplicação Java com Spring Boot**.  
+Este projeto foi desenvolvido com o objetivo de **explorar e aplicar testes unitários em uma aplicação Java com Spring Boot**.
 A ideia é simular cenários reais, garantindo **qualidade, confiabilidade e manutenção do código** através de testes automatizados.
 
 O foco principal é:
@@ -24,35 +24,35 @@ O foco principal é:
 
 ## ✨ Funcionalidades Principais
 
-- ✅ Escrita de **testes unitários** com JUnit 5.  
-- ✅ Uso de **mocks, stubs e spies** com Mockito para isolar dependências.  
-- ✅ Estrutura de testes organizada para **facilitar manutenção e escalabilidade**.  
-- ✅ Foco em **cobertura de testes** e boas práticas.  
+- ✅ Escrita de **testes unitários** com JUnit 5.
+- ✅ Uso de **mocks, stubs e spies** com Mockito para isolar dependências.
+- ✅ Estrutura de testes organizada para **facilitar manutenção e escalabilidade**.
+- ✅ Foco em **cobertura de testes** e boas práticas.
 
 ---
 
 ## 🛠️ Tecnologias e Ferramentas Utilizadas
 
-- **Linguagem:** Java 17  
-- **Framework:** Spring Boot 3  
-- **Gerenciador de Dependências:** Maven  
-- **Framework de Testes:** JUnit 5  
-- **Mocking:** Mockito  
+- **Linguagem:** Java 17
+- **Framework:** Spring Boot 3
+- **Gerenciador de Dependências:** Maven
+- **Framework de Testes:** JUnit 5
+- **Mocking:** Mockito
 
 ---
 
 ## 🚀 Como Executar o Projeto
 
 **Pré-requisitos:**
-- Java 17+  
-- Maven 3.6.3+  
-- IDE como IntelliJ, Eclipse ou VS Code com suporte a Maven/Java  
+- Java 17+
+- Maven 3.6.3+
+- IDE como IntelliJ, Eclipse ou VS Code com suporte a Maven/Java
 
 **Passo a passo:**
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/jr-adalberto/unit-tests.git
+git clone [https://github.com/jr-adalberto/unit-tests.git](https://github.com/jr-adalberto/unit-tests.git)
 
 # 2. Navegue até o diretório do projeto
 cd unit-tests
