@@ -4,7 +4,7 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
 ![JUnit](https://img.shields.io/badge/JUnit-5-red)
 ![Mockito](https://img.shields.io/badge/Mockito-Mocking-lightgrey)
-![Status](https://img.shields.io/badge/Status-Concluído-brightgreen)
+![Status](https://img.shields.io/badge/Status-Em%20andamento-blue)
 
 > Ambiente de estudo e prática de **testes unitários em Java**, utilizando **JUnit 5** e **Mockito**, com foco em boas práticas e isolamento de dependências.
 
