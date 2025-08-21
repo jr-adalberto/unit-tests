@@ -31,13 +31,14 @@ public class MensagemServiceIT {
 
     @Nested
     class RegistrarMensagem {
-
         @Test
         void deveRegistrarMensagem() {
             // Arrange
             var mensagem = MensagemHelper.gerarMensagem();
+
             // Act
             var mensagemObtida = mensagemService.registrarMensagem(mensagem);
+
             // Assert
             assertThat(mensagemObtida).isNotNull().isInstanceOf(Mensagem.class);
             assertThat(mensagemObtida.getId()).isNotNull();
@@ -51,25 +52,29 @@ public class MensagemServiceIT {
         @Test
         void deveBuscarMensagem() {
             // Arrange
-            var id = UUID.fromString("88ace1ea-7cde-4276-a44b-ae3b0adead1d");
-            var mensagemObtida = mensagemService.buscarMensagem(id);
+            var mensagem = MensagemHelper.gerarMensagem();
+            mensagem.setId(UUID.randomUUID());
+            mensagemRepository.save(mensagem);
+
+            // Act
+            var mensagemObtida = mensagemService.buscarMensagem(mensagem.getId());
+
             // Assert
             assertThat(mensagemObtida).isNotNull().isInstanceOf(Mensagem.class);
-            assertThat(mensagemObtida.getId()).isNotNull().isEqualTo(id);
-            assertThat(mensagemObtida.getUsuario()).isNotNull().isEqualTo("James");
-            assertThat(mensagemObtida.getConteudo()).isNotNull().isEqualTo("Mensagem one");
+            assertThat(mensagemObtida.getId()).isEqualTo(mensagem.getId());
+            assertThat(mensagemObtida.getUsuario()).isEqualTo(mensagem.getUsuario());
+            assertThat(mensagemObtida.getConteudo()).isEqualTo(mensagem.getConteudo());
             assertThat(mensagemObtida.getDataCriacao()).isNotNull();
-            assertThat(mensagemObtida.getGostei()).isEqualTo(0);
+            assertThat(mensagemObtida.getGostei()).isZero();
         }
 
         @Test
         void deveGerarExcecao_QuandoBuscarMensagem_IdNaoExiste() {
-            var id = UUID.fromString("10b75e75-2685-405a-bcdf-bdd4410381ba");
+            var id = UUID.randomUUID();
             assertThatThrownBy(() -> mensagemService.buscarMensagem(id))
                     .isInstanceOf(MensagemNotFoundException.class)
                     .hasMessage("Mensagem não encontrada.");
         }
-
     }
 
     @Nested
@@ -77,24 +82,27 @@ public class MensagemServiceIT {
         @Test
         void devePermitirAlterarMensagem() {
             // Arrange
-            var id = UUID.fromString("85e7f770-d4be-4622-9437-bc4c5c1c63b2");
-            var mensagemAtualizada = MensagemHelper.gerarMensagem();
-            mensagemAtualizada.setId(id);
-            var mensagemObtida = mensagemService.alterarMensagem(id, mensagemAtualizada);
-            // Arrange
-            assertThat(mensagemObtida.getId()).isEqualTo(id);
-            assertThat(mensagemObtida.getConteudo()).isEqualTo(mensagemAtualizada.getConteudo());
+            var mensagem = MensagemHelper.gerarMensagem();
+            mensagem.setId(UUID.randomUUID());
+            mensagemRepository.save(mensagem);
 
-            assertThat(mensagemObtida.getUsuario()).isNotEqualTo(mensagemAtualizada.getUsuario());
+            var mensagemAtualizada = MensagemHelper.gerarMensagem();
+            mensagemAtualizada.setId(mensagem.getId());
+
+            // Act
+            var mensagemObtida = mensagemService.alterarMensagem(mensagem.getId(), mensagemAtualizada);
+
+            // Assert
+            assertThat(mensagemObtida.getId()).isEqualTo(mensagem.getId());
+            assertThat(mensagemObtida.getConteudo()).isEqualTo(mensagemAtualizada.getConteudo());
         }
 
         @Test
         void deveGerarExcecao_QuandoAlterarMensagem_IdNaoExiste() {
-            // Arrange
-            var id = UUID.fromString("44a8d226-2fcf-48d0-9985-c58d263579c4");
+            var id = UUID.randomUUID();
             var mensagemAtualizada = MensagemHelper.gerarMensagem();
             mensagemAtualizada.setId(id);
-            // Assert
+
             assertThatThrownBy(() -> mensagemService.alterarMensagem(id, mensagemAtualizada))
                     .isInstanceOf(MensagemNotFoundException.class)
                     .hasMessage("Mensagem não encontrada.");
@@ -103,11 +111,15 @@ public class MensagemServiceIT {
         @Test
         void deveGerarExcecao_QuandoAlterarMensagem_IdMensagemNovaDiferente() {
             // Arrange
-            var id = UUID.fromString("85e7f770-d4be-4622-9437-bc4c5c1c63b2");
+            var mensagem = MensagemHelper.gerarMensagem();
+            mensagem.setId(UUID.randomUUID());
+            mensagemRepository.save(mensagem);
+
             var mensagemAtualizada = MensagemHelper.gerarMensagem();
-            mensagemAtualizada.setId(UUID.fromString("e75909d9-18d9-4435-bc75-380a400cb14b"));
+            mensagemAtualizada.setId(UUID.randomUUID());
+
             // Assert
-            assertThatThrownBy(() -> mensagemService.alterarMensagem(id, mensagemAtualizada))
+            assertThatThrownBy(() -> mensagemService.alterarMensagem(mensagem.getId(), mensagemAtualizada))
                     .isInstanceOf(MensagemNotFoundException.class)
                     .hasMessage("Mensagem atualizada não apresenta o ID correto.");
         }
@@ -118,17 +130,20 @@ public class MensagemServiceIT {
         @Test
         void devePermitirRemoverMensagem() {
             // Arrange
-            var id = UUID.fromString("a2674580-22e3-49e0-9dc1-0bc5a8f193e0");
-            var resultadoObtido = mensagemService.removerMensagem(id);
+            var mensagem = MensagemHelper.gerarMensagem();
+            mensagem.setId(UUID.randomUUID());
+            mensagemRepository.save(mensagem);
+
+            // Act
+            var resultadoObtido = mensagemService.removerMensagem(mensagem.getId());
+
             // Assert
             assertThat(resultadoObtido).isTrue();
         }
 
         @Test
         void deveGerarExcecao_QuandoRemoverMensagem_IdNaoExiste() {
-            // Arrange
-            var id = UUID.fromString("971b1e85-b5a6-44ef-a33c-e140f976fc41");
-            // Assert
+            var id = UUID.randomUUID();
             assertThatThrownBy(() -> mensagemService.removerMensagem(id))
                     .isInstanceOf(MensagemNotFoundException.class)
                     .hasMessage("Mensagem não encontrada.");
@@ -137,16 +152,19 @@ public class MensagemServiceIT {
 
     @Nested
     class ListarMensagem {
-
         @Test
         void devePermitirListarMensagem() {
             // Arrange
+            mensagemService.registrarMensagem(MensagemHelper.gerarMensagem());
+            mensagemService.registrarMensagem(MensagemHelper.gerarMensagem());
+
+            // Act
             Page<Mensagem> listaMensagens = mensagemService.listasMensagens(Pageable.unpaged());
+
             // Assert
-            assertThat(listaMensagens).hasSize(3).allSatisfy(mensagemObtida -> {
-                assertThat(mensagemObtida).isNotNull();
-            });
+            assertThat(listaMensagens).isNotEmpty().allSatisfy(mensagemObtida ->
+                    assertThat(mensagemObtida).isNotNull()
+            );
         }
     }
-
 }

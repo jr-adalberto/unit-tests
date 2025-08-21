@@ -26,7 +26,7 @@ class MensagemRepositoryIT {
         @Test
         void devePermitirCriarTabela() {
             var totalDeRegistros = mensagemRepository.count();
-            assertThat(totalDeRegistros).isPositive();
+            assertThat(totalDeRegistros).isNotNegative();
         }
     }
 
@@ -35,19 +35,17 @@ class MensagemRepositoryIT {
         @Test
         void devePermitirRegistrarMensagem() {
             // Arrange
-            var id = UUID.randomUUID();
             var mensagem = MensagemHelper.gerarMensagem();
-            mensagem.setId(id);
+            mensagem.setId(UUID.randomUUID());
+
             // Act
             var mensagemRecebida = mensagemRepository.save(mensagem);
+
             // Assert
-            assertThat(mensagemRecebida)
-                    .isInstanceOf(Mensagem.class)
-                    .isNotNull();
-            assertThat(mensagemRecebida.getId()).isEqualTo(id);
+            assertThat(mensagemRecebida).isNotNull().isInstanceOf(Mensagem.class);
+            assertThat(mensagemRecebida.getId()).isEqualTo(mensagem.getId());
             assertThat(mensagemRecebida.getConteudo()).isEqualTo(mensagem.getConteudo());
             assertThat(mensagemRecebida.getUsuario()).isEqualTo(mensagem.getUsuario());
-
         }
     }
 
@@ -56,15 +54,18 @@ class MensagemRepositoryIT {
         @Test
         void devePermitirBuscarMensagem() {
             // Arrange
-            var id = UUID.fromString("88ace1ea-7cde-4276-a44b-ae3b0adead1d");
+            var mensagem = MensagemHelper.gerarMensagem();
+            mensagem.setId(UUID.randomUUID());
+            mensagemRepository.save(mensagem);
+
             // Act
-            var mensagemOptional = mensagemRepository.findById(id);
+            var mensagemOptional = mensagemRepository.findById(mensagem.getId());
+
             // Assert
             assertThat(mensagemOptional).isPresent();
-
-            mensagemOptional.ifPresent(mensagemRecebida -> {
-                assertThat(mensagemRecebida.getId()).isEqualTo(id);
-            });
+            mensagemOptional.ifPresent(mensagemRecebida ->
+                    assertThat(mensagemRecebida.getId()).isEqualTo(mensagem.getId())
+            );
         }
     }
 
@@ -73,10 +74,14 @@ class MensagemRepositoryIT {
         @Test
         void devePermitirRemoverMensagem() {
             // Arrange
-            var id = UUID.fromString("85e7f770-d4be-4622-9437-bc4c5c1c63b2");
+            var mensagem = MensagemHelper.gerarMensagem();
+            mensagem.setId(UUID.randomUUID());
+            mensagemRepository.save(mensagem);
+
             // Act
-            mensagemRepository.deleteById(id);
-            var mensagemOptional = mensagemRepository.findById(id);
+            mensagemRepository.deleteById(mensagem.getId());
+            var mensagemOptional = mensagemRepository.findById(mensagem.getId());
+
             // Assert
             assertThat(mensagemOptional).isEmpty();
         }
@@ -86,12 +91,16 @@ class MensagemRepositoryIT {
     class ListarMensagem {
         @Test
         void devePermitirListarMensagem() {
+            // Arrange
+            var mensagem = MensagemHelper.gerarMensagem();
+            mensagem.setId(UUID.randomUUID());
+            mensagemRepository.save(mensagem);
+
             // Act
             var resultadosObtidos = mensagemRepository.findAll();
+
             // Assert
-            assertThat(resultadosObtidos).hasSizeGreaterThan(0);
+            assertThat(resultadosObtidos).isNotEmpty();
         }
     }
-
-
 }

@@ -2,6 +2,7 @@ package br.api.tests.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
@@ -10,22 +11,25 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.jackson.Jacksonized;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Builder(toBuilder = true)
 @Entity
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Jacksonized
 public class Mensagem {
 
     @Id
-    @GenericGenerator(name = "uuid")
+    @Column(name = "id", columnDefinition = "VARCHAR(36)")
     private UUID id;
+
 
     @NotEmpty(message = "usuário não pode estar vazio")
     private String usuario;
