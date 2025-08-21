@@ -1,179 +1,61 @@
-🧪 unit-tests
+# 🧪 Unit Tests com JUnit 5 e Mockito
 
-Bem-vindo ao repositório unit-tests! Este projeto é um ambiente dedicado ao estudo aprofundado e à aplicação prática de testes unitários em Java, utilizando as poderosas bibliotecas JUnit 5 e Mockito.
+![Java](https://img.shields.io/badge/Java-17-blue)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
+![JUnit](https://img.shields.io/badge/JUnit-5-red)
+![Mockito](https://img.shields.io/badge/Mockito-Mocking-lightgrey)
+![Status](https://img.shields.io/badge/Status-Em%20andamento-blue)
 
+> Ambiente de estudo e prática de **testes unitários em Java**, utilizando **JUnit 5** e **Mockito**, com foco em boas práticas e isolamento de dependências.
 
+---
 
+## 📝 Sobre o Projeto
 
-📋 Índice
+Este projeto foi desenvolvido com o objetivo de **explorar e aplicar testes unitários em uma aplicação Java com Spring Boot**.
+A ideia é simular cenários reais, garantindo **qualidade, confiabilidade e manutenção do código** através de testes automatizados.
 
-•
-Visão Geral
+O foco principal é:
+- Uso do **JUnit 5** para escrita e execução dos testes.
+- Uso do **Mockito** para criar *mocks* de dependências externas (como serviços e repositórios).
+- Demonstração de **tratamento de exceções, validação de resultados e cobertura de testes**.
 
-•
-Funcionalidades
+---
 
-•
-Tecnologias Utilizadas
+## ✨ Funcionalidades Principais
 
-•
-Pré-requisitos
+- ✅ Escrita de **testes unitários** com JUnit 5.
+- ✅ Uso de **mocks, stubs e spies** com Mockito para isolar dependências.
+- ✅ Estrutura de testes organizada para **facilitar manutenção e escalabilidade**.
+- ✅ Foco em **cobertura de testes** e boas práticas.
 
-•
-Como Executar o Projeto
+---
 
-•
-Estrutura do Projeto
+## 🛠️ Tecnologias e Ferramentas Utilizadas
 
-•
-Contribuição
+- **Linguagem:** Java 17
+- **Framework:** Spring Boot 3
+- **Gerenciador de Dependências:** Maven
+- **Framework de Testes:** JUnit 5
+- **Mocking:** Mockito
 
-•
-Licença
+---
 
-•
-Autor
+## 🚀 Como Executar o Projeto
 
+**Pré-requisitos:**
+- Java 17+
+- Maven 3.6.3+
+- IDE como IntelliJ, Eclipse ou VS Code com suporte a Maven/Java
 
+**Passo a passo:**
 
+```bash
+# 1. Clone o repositório
+git clone [https://github.com/jr-adalberto/unit-tests.git](https://github.com/jr-adalberto/unit-tests.git)
 
-🌟 Visão Geral
+# 2. Navegue até o diretório do projeto
+cd unit-tests
 
-Este projeto foi desenvolvido com o propósito de explorar e demonstrar as melhores práticas na escrita de testes unitários robustos e eficientes em Java. Através de exemplos práticos, o objetivo é solidificar o conhecimento em JUnit 5 para a criação de testes e em Mockito para a simulação de dependências, garantindo o isolamento e a confiabilidade dos testes.
-
-
-
-
-🛠 Funcionalidades
-
-•
-Testes Unitários com JUnit 5: Exemplos de como escrever testes eficazes para diferentes cenários e componentes de software.
-
-•
-Mocking de Dependências com Mockito: Demonstrações de como utilizar mocks, stubs e spies para isolar a unidade de código sob teste, controlando o comportamento de suas dependências.
-
-•
-Cobertura de Testes: Foco na importância da cobertura de testes para garantir a qualidade do código.
-
-•
-Organização de Testes: Estrutura de projeto que facilita a manutenção e escalabilidade dos testes.
-
-
-
-
-🚀 Tecnologias Utilizadas
-
-•
-Linguagem: Java
-
-•
-Gerenciador de Dependências: Maven
-
-•
-Framework de Testes: JUnit 5
-
-•
-Biblioteca de Mocking: Mockito
-
-
-
-
-📋 Pré-requisitos
-
-Antes de executar o projeto, certifique-se de ter as seguintes ferramentas instaladas em sua máquina:
-
-•
-Java Development Kit (JDK): Versão 8 ou superior (recomenda-se a versão 17 para compatibilidade com as últimas features).
-
-•
-Apache Maven: Versão 3.6.3 ou superior.
-
-•
-Um ambiente de desenvolvimento integrado (IDE) como IntelliJ IDEA, Eclipse ou VS Code com suporte a Java e Maven.
-
-
-
-
-🚀 Como Executar o Projeto
-
-Siga os passos abaixo para clonar o repositório e executar os testes unitários localmente:
-
-1.
-Clone o repositório:
-
-2.
-Navegue até o diretório do projeto:
-
-3.
-Execute os testes com Maven:
-
-
-
-
-📂 Estrutura do Projeto
-
-A organização do projeto segue a convenção padrão do Maven para projetos Java:
-
-Plain Text
-
-
-unit-tests/
-├── .idea/                 # Arquivos de configuração específicos do IntelliJ IDEA
-├── src/
-│   ├── main/
-│   │   └── java/          # Código-fonte principal da aplicação (classes a serem testadas)
-│   │       └── com/example/yourproject/
-│   │           └── ...
-│   └── test/
-│       └── java/          # Código-fonte dos testes unitários
-│           └── com/example/yourproject/
-│               └── ...
-├── .gitignore             # Arquivo que especifica arquivos e diretórios a serem ignorados pelo Git
-└── pom.xml                # Arquivo de configuração do Maven, contendo dependências e configurações de build
-
-
-•
-src/main/java: Contém as classes da aplicação que são o foco dos testes unitários.
-
-•
-src/test/java: Contém as classes de teste, que utilizam JUnit 5 e Mockito para verificar o comportamento das classes em src/main/java.
-
-•
-pom.xml: Gerencia as dependências do projeto, incluindo JUnit 5 e Mockito, e define o ciclo de vida da construção.
-
-
-
-
-🤝 Contribuição
-
-Sua contribuição é muito valorizada! Se você tem ideias para novos exemplos de testes, melhorias no código, correções de bugs ou qualquer outra sugestão, sinta-se à vontade para contribuir. Por favor, siga os passos abaixo:
-
-1.
-Faça um fork deste repositório.
-
-2.
-Crie uma nova branch para sua feature ou correção (git checkout -b feature/nome-da-feature ou bugfix/nome-da-correcao).
-
-3.
-Faça suas alterações e adicione commits claros e descritivos.
-
-4.
-Envie suas alterações para o seu fork (git push origin feature/nome-da-feature).
-
-5.
-Abra um Pull Request para este repositório, descrevendo suas alterações.
-
-
-
-
-📄 Licença
-
-Este projeto está licenciado sob a licença MIT. Para detalhes completos, consulte o arquivo LICENSE na raiz deste repositório.
-
-
-
-
-👤 Autor
-
-jr-adalberto
-
+# 3. Execute os testes com Maven
+mvn test
