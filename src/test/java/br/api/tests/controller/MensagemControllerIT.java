@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.assertj.core.api.Fail.fail;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasKey;
@@ -40,9 +41,13 @@ public class MensagemControllerIT {
             given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(mensagem)
+                    .log().all()
                     .when()
                     .post("/mensagens")
-                    .then().statusCode(HttpStatus.CREATED.value());
+                    .then()
+                    .log().all()
+                    .statusCode(HttpStatus.CREATED.value())
+                    .body(matchesJsonSchemaInClasspath("schemas/mensagem-schema.json"));
         }
 
         @Test
@@ -51,14 +56,15 @@ public class MensagemControllerIT {
             given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(xmlPayload)
-                    .when()
+                    .log().all()
+            .when()
                     .post("/mensagens")
-                    .then()
+            .then()
+                    .log().all()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .body("status", equalTo(400))
+                    .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
                     .body("error", equalTo("Bad Request"))
-                    .body("path", equalTo("/mensagens"))
-                    .body("$", hasKey("timestamp"));
+                    .body("path", equalTo("/mensagens"));
         }
     }
 
