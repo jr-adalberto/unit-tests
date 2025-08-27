@@ -1,0 +1,150 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/Welcome",
+  "definitions": {
+    "Welcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "totalElements": {
+          "type": "integer"
+        },
+        "totalPages": {
+          "type": "integer"
+        },
+        "size": {
+          "type": "integer"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Content"
+          }
+        },
+        "number": {
+          "type": "integer"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "numberOfElements": {
+          "type": "integer"
+        },
+        "pageable": {
+          "$ref": "#/definitions/Pageable"
+        },
+        "first": {
+          "type": "boolean"
+        },
+        "last": {
+          "type": "boolean"
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "content",
+        "empty",
+        "first",
+        "last",
+        "number",
+        "numberOfElements",
+        "pageable",
+        "size",
+        "sort",
+        "totalElements",
+        "totalPages"
+      ],
+      "title": "Welcome"
+    },
+    "Content": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "usuario": {
+          "type": "string"
+        },
+        "conteudo": {
+          "type": "string"
+        },
+        "dataCriacao": {
+          "type": "string"
+        },
+        "dataAlteracao": {
+          "type": ["string", "null"]
+        },
+        "gostei": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "conteudo",
+        "dataAlteracao",
+        "dataCriacao",
+        "gostei",
+        "id",
+        "usuario"
+      ],
+      "title": "Content"
+    },
+    "Pageable": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pageNumber": {
+          "type": "integer"
+        },
+        "pageSize": {
+          "type": "integer"
+        },
+        "sort": {
+          "$ref": "#/definitions/Sort"
+        },
+        "offset": {
+          "type": "integer"
+        },
+        "paged": {
+          "type": "boolean"
+        },
+        "unpaged": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "offset",
+        "pageNumber",
+        "pageSize",
+        "paged",
+        "sort",
+        "unpaged"
+      ],
+      "title": "Pageable"
+    },
+    "Sort": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "empty": {
+          "type": "boolean"
+        },
+        "sorted": {
+          "type": "boolean"
+        },
+        "unsorted": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "empty",
+        "sorted",
+        "unsorted"
+      ],
+      "title": "Sort"
+    }
+  }
+}

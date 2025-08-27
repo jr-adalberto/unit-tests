@@ -18,7 +18,7 @@
       "type": "string"
     },
     "dataAlteracao": {
-      "type": "string"
+      "type": ["string", "null"]
     },
     "gostei": {
       "type": "integer"
