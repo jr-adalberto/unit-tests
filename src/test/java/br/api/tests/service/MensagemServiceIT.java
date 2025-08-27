@@ -121,7 +121,7 @@ public class MensagemServiceIT {
             // Assert
             assertThatThrownBy(() -> mensagemService.alterarMensagem(mensagem.getId(), mensagemAtualizada))
                     .isInstanceOf(MensagemNotFoundException.class)
-                    .hasMessage("Mensagem atualizada não apresenta o ID correto.");
+                    .hasMessage("Mensagem não encontrada.");
         }
     }
 

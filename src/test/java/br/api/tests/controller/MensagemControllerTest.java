@@ -143,7 +143,7 @@ public class MensagemControllerTest {
             var id = UUID.fromString("7fc506a7-15a0-4b72-a752-2005e59c6dc2");
             var mensagem = MensagemHelper.gerarMensagem();
             mensagem.setId(UUID.fromString("27bc03e7-1fd9-455a-87ff-ca48e7bf9e0b"));
-            var conteudoExcecao = "Mensagem atualizada não apresenta o ID correto.";
+            var conteudoExcecao = "Mensagem não encontrada.";
             when(mensagemService.alterarMensagem(any(UUID.class), any(Mensagem.class)))
                     .thenThrow(new MensagemNotFoundException(conteudoExcecao));
             // Act & Assert
@@ -151,7 +151,7 @@ public class MensagemControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(asJsonString(mensagem)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(content().string("Mensagem atualizada não apresenta o ID correto."));
+                    .andExpect(content().string("Mensagem não encontrada."));
             verify(mensagemService, times(1))
                     .alterarMensagem(any(UUID.class), any(Mensagem.class));
         }

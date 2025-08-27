@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -31,9 +32,10 @@ public class MensagemServiceImpl implements MensagemService {
     @Override
     public Mensagem alterarMensagem(UUID id, Mensagem mensagemAtualizada) {
         var mensagem = buscarMensagem(id);
-        if (!mensagem.getId().equals(mensagemAtualizada.getId())) {
-            throw new MensagemNotFoundException("Mensagem atualizada não apresenta o ID correto.");
+        if (mensagemAtualizada.getId() != null && !mensagem.getId().equals(mensagemAtualizada.getId())) {
+            throw new IllegalArgumentException("mensagem não apresenta o ID correto");
         }
+        mensagem.setDataAlteracao(LocalDateTime.now());
         mensagem.setConteudo(mensagemAtualizada.getConteudo());
         return mensagemRepository.save(mensagem);
     }

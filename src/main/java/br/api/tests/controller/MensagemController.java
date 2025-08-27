@@ -66,8 +66,10 @@ public class MensagemController {
         try {
             var mensagemAlterada = mensagemService.alterarMensagem(uuid, mensagemAtualizada);
             return new ResponseEntity<>(mensagemAlterada, HttpStatus.OK);
-        } catch (MensagemNotFoundException mensagemNotFoundException) {
-            return new ResponseEntity<>("Mensagem atualizada não apresenta o ID correto.", HttpStatus.BAD_REQUEST);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (MensagemNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
