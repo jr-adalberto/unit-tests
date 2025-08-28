@@ -2,6 +2,7 @@ package br.api.tests.controller;
 
 import br.api.tests.model.Mensagem;
 import br.api.tests.utils.MensagemHelper;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -18,11 +19,12 @@ import java.util.UUID;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.assertj.core.api.Fail.fail;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@Sql(scripts = {"classpath:clean.sql", "classpath:data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class MensagemControllerIT {
 
     @LocalServerPort
@@ -34,11 +36,10 @@ public class MensagemControllerIT {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-
     @Nested
     class RegistrarMensagem {
         @Test
-        void devePermitirRegistrarMensagem() throws Exception {
+        void devePermitirRegistrarMensagem() {
             var mensagem = MensagemHelper.gerarMensagem();
             given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -53,7 +54,7 @@ public class MensagemControllerIT {
         }
 
         @Test
-        void deveGerarExecao_QuandoRegistrarMensagem_PayloadXML() throws Exception {
+        void deveGerarExecao_QuandoRegistrarMensagem_PayloadXML() {
             String xmlPayload = "<mensagem><conteudo>Teste</conteudo><usuario>Ana</usuario></mensagem>";
             given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -73,8 +74,7 @@ public class MensagemControllerIT {
     @Nested
     class BuscarMensagem {
         @Test
-        @Sql(scripts = "classpath:data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-        void devePermitirBuscarMensagem() throws Exception {
+        void devePermitirBuscarMensagem() {
             var id = "bd0e31fd-58b7-44e0-bbff-cc0aaf817b9d";
             when()
                     .get("/mensagens/{id}", id)
@@ -84,7 +84,7 @@ public class MensagemControllerIT {
         }
 
         @Test
-        void deveGerarExecao_QuandoBuscarMensagem_IdNaoExiste() throws Exception {
+        void deveGerarExecao_QuandoBuscarMensagem_IdNaoExiste() {
             var id = "bd0e31fd-58b7-44e0-bbff-cc0aaf817b9";
             when()
                     .get("/mensagens/{id}", id)
@@ -94,7 +94,6 @@ public class MensagemControllerIT {
     }
 
     @Nested
-    @Sql(scripts = "classpath:data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     class AlterarMensagem {
         @Test
         void devePermitirAlterarMensagem() {
@@ -131,7 +130,7 @@ public class MensagemControllerIT {
                     .put("/mensagens/{id}", id)
                     .then()
                     .log().all()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .statusCode(HttpStatus.NOT_FOUND.value())
                     .body(equalTo("Mensagem não encontrada."));
         }
 
@@ -157,7 +156,20 @@ public class MensagemControllerIT {
 
         @Test
         void deveGerarExecao_QuandoPayloadMensagem_PayloadXML() {
-            fail("Not yet implemented");
+            var id = UUID.fromString("4ff2f92d-c45d-4b5b-b31a-dbd552234574");
+            String xmlPayload = "<mensagem><id>4ff2f92d-c45d-4b5b-b31a-dbd552234574</id><conteudo>Teste</conteudo><usuario>Ana</usuario></mensagem>";
+
+            given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(xmlPayload)
+                    .when()
+                    .put("/mensagens/{id}", id)
+                    .then()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .body(matchesJsonSchemaInClasspath("schemas/error.schema.json"))
+                    .body("error", equalTo("Bad Request"))
+                    .body("path", equalTo("/mensagens/4ff2f92d-c45d-4b5b-b31a-dbd552234574"))
+                    .body("path", containsString("/mensagens"));
         }
 
         @Nested
@@ -174,22 +186,35 @@ public class MensagemControllerIT {
 
             @Test
             void deveGerarExecao_QuandoRemoverMensagem_IdNaoExiste() {
-                fail("Not yet implemented");
+                var id = "5f789b39-4295-42c1-a65b-cfca5b987db3";
+                given()
+                        .filter(new AllureRestAssured())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .when()
+                        .delete("/mensagens/{id}", id)
+                        .then()
+                        .statusCode(HttpStatus.NOT_FOUND.value())
+                        .body(equalTo("Mensagem não encontrada."));
             }
 
             @Nested
             class ListarMensagens {
                 @Test
                 void devePermitirListarMensagens() {
-                    fail("Not yet implemented");
+                    given()
+                            .queryParam("page", 0)
+                            .queryParam("size", 10)
+                            .when()
+                            .get("/mensagens")
+                            .then()
+                            .log().all()
+                            .statusCode(HttpStatus.OK.value())
+                            .body(matchesJsonSchemaInClasspath("schemas/mensagem.page.schema.json"));
                 }
 
                 @Test
                 void devePermitirListarMensagens_QuandoNaoInformadoPaginacao() {
-                    given()
-                          .pathParam("page", 0)
-                          .pathParam("size", 10)
-                            .when()
+                    when()
                             .get("/mensagens")
                             .then()
                             .log().all()

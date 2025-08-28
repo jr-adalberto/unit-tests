@@ -142,16 +142,19 @@ public class MensagemControllerTest {
             // Arrange
             var id = UUID.fromString("7fc506a7-15a0-4b72-a752-2005e59c6dc2");
             var mensagem = MensagemHelper.gerarMensagem();
-            mensagem.setId(UUID.fromString("27bc03e7-1fd9-455a-87ff-ca48e7bf9e0b"));
-            var conteudoExcecao = "Mensagem não encontrada.";
+            mensagem.setId(UUID.fromString("27bc03e7-1fd9-455a-87ff-ca48e7bf9e0b")); // ID diferente do path
+            var conteudoExcecao = "mensagem não apresenta o ID correto";
+
             when(mensagemService.alterarMensagem(any(UUID.class), any(Mensagem.class)))
-                    .thenThrow(new MensagemNotFoundException(conteudoExcecao));
+                    .thenThrow(new IllegalArgumentException(conteudoExcecao));
+
             // Act & Assert
             mockMvc.perform(put("/mensagens/{id}", id)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(asJsonString(mensagem)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(content().string("Mensagem não encontrada."));
+                    .andExpect(content().string(conteudoExcecao));
+
             verify(mensagemService, times(1))
                     .alterarMensagem(any(UUID.class), any(Mensagem.class));
         }
@@ -162,17 +165,22 @@ public class MensagemControllerTest {
             var id = UUID.fromString("a80a08d4-39f5-4f2a-997c-c5252133a4fe");
             var mensagem = MensagemHelper.gerarMensagem();
             mensagem.setId(id);
-            var conteudoExcecao = "mensagem não encontrada.";
+            var conteudoExcecao = "Mensagem não encontrada.";
+
             when(mensagemService.alterarMensagem(any(UUID.class), any(Mensagem.class)))
-                    .thenThrow(MensagemNotFoundException.class);
+                    .thenThrow(new MensagemNotFoundException(conteudoExcecao));
+
             // Act & Assert
             mockMvc.perform(put("/mensagens/{id}", id)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(asJsonString(MensagemHelper.gerarMensagem())))
-                    .andExpect(status().isBadRequest());
+                            .content(asJsonString(mensagem)))
+                    .andExpect(status().isNotFound())
+                    .andExpect(content().string(conteudoExcecao));
+
             verify(mensagemService, times(1))
                     .alterarMensagem(any(UUID.class), any(Mensagem.class));
         }
+
 
         @Test
         void deveGerarExecao_QuandoPayloadMensagem_PayloadXML() throws Exception {
@@ -209,10 +217,11 @@ public class MensagemControllerTest {
             // Arrange
             var id = UUID.fromString("0aeea15c-aae9-492d-9298-aaf3222f9b55");
             var mensagemDaExcecao = "Mensagem não encontrada.";
-            when(mensagemService.removerMensagem(id)).thenThrow(new MensagemNotFoundException(mensagemDaExcecao));
+            when(mensagemService.removerMensagem(id))
+                    .thenThrow(new MensagemNotFoundException(mensagemDaExcecao));
             // Act & Assert
             mockMvc.perform(delete("/mensagens/{id}", id))
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isNotFound())
                     .andExpect(content().string(mensagemDaExcecao));
             verify(mensagemService, times(1)).removerMensagem(any(UUID.class));
         }

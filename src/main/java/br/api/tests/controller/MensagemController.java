@@ -81,7 +81,7 @@ public class MensagemController {
             return new ResponseEntity<>("Mensagem removida com sucesso.", HttpStatus.OK);
         } catch (MensagemNotFoundException mensagemNotFoundException) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                    .status(HttpStatus.NOT_FOUND)
                     .body(mensagemNotFoundException.getMessage());
         }
     }

@@ -111,17 +111,18 @@ public class MensagemServiceIT {
         @Test
         void deveGerarExcecao_QuandoAlterarMensagem_IdMensagemNovaDiferente() {
             // Arrange
-            var mensagem = MensagemHelper.gerarMensagem();
-            mensagem.setId(UUID.randomUUID());
-            mensagemRepository.save(mensagem);
+            var mensagemOriginal = MensagemHelper.gerarMensagem();
+            var mensagemSalva = mensagemService.registrarMensagem(mensagemOriginal);
 
-            var mensagemAtualizada = MensagemHelper.gerarMensagem();
+            var mensagemAtualizada = new Mensagem();
             mensagemAtualizada.setId(UUID.randomUUID());
+            mensagemAtualizada.setUsuario("Outro Usuario");
+            mensagemAtualizada.setConteudo("Outro Conteudo");
 
-            // Assert
-            assertThatThrownBy(() -> mensagemService.alterarMensagem(mensagem.getId(), mensagemAtualizada))
-                    .isInstanceOf(MensagemNotFoundException.class)
-                    .hasMessage("Mensagem não encontrada.");
+            // Act & Assert
+            assertThatThrownBy(() -> mensagemService.alterarMensagem(mensagemSalva.getId(), mensagemAtualizada))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("mensagem não apresenta o ID correto");
         }
     }
 
