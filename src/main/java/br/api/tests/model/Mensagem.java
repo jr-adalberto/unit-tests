@@ -13,7 +13,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -29,7 +28,6 @@ public class Mensagem {
     @Id
     @Column(name = "id", columnDefinition = "VARCHAR(36)")
     private UUID id;
-
 
     @NotEmpty(message = "usuário não pode estar vazio")
     private String usuario;
