@@ -80,7 +80,7 @@ class MensagemServiceTest {
         }
 
         @Test
-        void deveGerarExcecao_QuandoBuscarMensagem_IdNaoExiste() {
+        void deveGerarExcecaoQuandoBuscarMensagemIdNaoExiste() {
             var id = UUID.fromString("bf416988-aa16-4bff-9dc2-597782fe06dd");
             when(mensagemRepository.findById(id))
                     .thenReturn(Optional.empty());
@@ -121,7 +121,7 @@ class MensagemServiceTest {
         }
 
         @Test
-        void deveGerarExcecao_QuandoAlterarMensagem_IdNaoExiste() {
+        void deveGerarExcecaoQuandoAlterarMensagemIdNaoExiste() {
             var id = UUID.fromString("f426d1fa-23f2-4b0d-836b-279bce3c6738");
             var mensagem = MensagemHelper.gerarMensagem();
             mensagem.setId(id);
@@ -136,7 +136,7 @@ class MensagemServiceTest {
         }
 
         @Test
-        void deveGerarExcecao_QuandoAlterarMensagem_IdMensagemNovaDiferente() {
+        void deveGerarExcecaoQuandoAlterarMensagemIdMensagemNovaDiferente() {
             var id = UUID.fromString("4c68505b-6dff-4db5-ae7e-f63ec9ad0753");
             var mensagemAntiga = MensagemHelper.gerarMensagem();
             mensagemAntiga.setId(id);
@@ -172,7 +172,7 @@ class MensagemServiceTest {
         }
 
         @Test
-        void deveGerarExcecao_QuandoRemoverMensagem_IdNaoExiste() {
+        void deveGerarExcecaoQuandoRemoverMensagemIdNaoExiste() {
             var id = UUID.fromString("3625eb65-1e46-4f44-93f8-247c6d14b726");
             when(mensagemRepository.findById(id))
                     .thenReturn(Optional.empty());

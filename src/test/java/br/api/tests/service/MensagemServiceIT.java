@@ -71,7 +71,7 @@ public class MensagemServiceIT {
         }
 
         @Test
-        void deveGerarExcecao_QuandoBuscarMensagem_IdNaoExiste() {
+        void deveGerarExcecaoQuandoBuscarMensagemIdNaoExiste() {
             var id = UUID.randomUUID();
             assertThatThrownBy(() -> mensagemService.buscarMensagem(id))
                     .isInstanceOf(MensagemNotFoundException.class)
@@ -100,7 +100,7 @@ public class MensagemServiceIT {
         }
 
         @Test
-        void deveGerarExcecao_QuandoAlterarMensagem_IdNaoExiste() {
+        void deveGerarExcecaoQuandoAlterarMensagemIdNaoExiste() {
             var id = UUID.randomUUID();
             var mensagemAtualizada = MensagemHelper.gerarMensagem();
             mensagemAtualizada.setId(id);
@@ -111,7 +111,7 @@ public class MensagemServiceIT {
         }
 
         @Test
-        void deveGerarExcecao_QuandoAlterarMensagem_IdMensagemNovaDiferente() {
+        void deveGerarExcecaoQuandoAlterarMensagemIdMensagemNovaDiferente() {
             // Arrange
             var mensagemOriginal = MensagemHelper.gerarMensagem();
             var mensagemSalva = mensagemService.registrarMensagem(mensagemOriginal);
@@ -145,7 +145,7 @@ public class MensagemServiceIT {
         }
 
         @Test
-        void deveGerarExcecao_QuandoRemoverMensagem_IdNaoExiste() {
+        void deveGerarExcecaoQuandoRemoverMensagemIdNaoExiste() {
             var id = UUID.randomUUID();
             assertThatThrownBy(() -> mensagemService.removerMensagem(id))
                     .isInstanceOf(MensagemNotFoundException.class)

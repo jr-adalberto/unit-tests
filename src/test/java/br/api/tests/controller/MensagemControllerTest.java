@@ -75,7 +75,7 @@ public class MensagemControllerTest {
         }
 
         @Test
-        void deveGerarExecao_QuandoRegistrarMensagem_PayloadXML() throws Exception {
+        void deveGerarExecaoQuandoRegistrarMensagemPayloadXML() throws Exception {
             // Arrange
             String payloadXml = "<mensagem><conteudo>Teste</conteudo><usuario>Ana</usuario></mensagem>";
             // Act & Assert
@@ -104,7 +104,7 @@ public class MensagemControllerTest {
         }
 
         @Test
-        void deveGerarExecao_QuandoBuscarMensagem_IdNaoExiste() throws Exception {
+        void deveGerarExecaoQuandoBuscarMensagemIdNaoExiste() throws Exception {
             // Arrange
             var id = UUID.fromString("db3c3577-1021-4c06-8990-4d24502871f3");
             when(mensagemService.buscarMensagem(any(UUID.class)))
@@ -138,7 +138,7 @@ public class MensagemControllerTest {
         }
 
         @Test
-        void deveGerarExcecao_QuandoAlterarMensagem_IdDaMensagemNovaApresentaValorDiferente() throws Exception {
+        void deveGerarExcecaoQuandoAlterarMensagemIdDaMensagemNovaApresentaValorDiferente() throws Exception {
             // Arrange
             var id = UUID.fromString("7fc506a7-15a0-4b72-a752-2005e59c6dc2");
             var mensagem = MensagemHelper.gerarMensagem();
@@ -160,7 +160,7 @@ public class MensagemControllerTest {
         }
 
         @Test
-        void deveGerarExecao_QuandoAlterarMensagem_IdNaoExiste() throws Exception {
+        void deveGerarExecaoQuandoAlterarMensagemIdNaoExiste() throws Exception {
             // Arrange
             var id = UUID.fromString("a80a08d4-39f5-4f2a-997c-c5252133a4fe");
             var mensagem = MensagemHelper.gerarMensagem();
@@ -183,7 +183,7 @@ public class MensagemControllerTest {
 
 
         @Test
-        void deveGerarExecao_QuandoPayloadMensagem_PayloadXML() throws Exception {
+        void deveGerarExecaoQuandoPayloadMensagemPayloadXML() throws Exception {
             // Arrange
             var id = UUID.fromString("edd228b0-0ebd-457c-ace0-d57850de5766");
             String payloadXml = "<mensagem><id>" + id.toString() + "</id><conteudo>Teste</conteudo><usuario>Ana</usuario></mensagem>";
@@ -213,7 +213,7 @@ public class MensagemControllerTest {
         }
 
         @Test
-        void deveGerarExecao_QuandoRemoverMensagem_IdNaoExiste() throws Exception {
+        void deveGerarExecaoQuandoRemoverMensagemIdNaoExiste() throws Exception {
             // Arrange
             var id = UUID.fromString("0aeea15c-aae9-492d-9298-aaf3222f9b55");
             var mensagemDaExcecao = "Mensagem não encontrada.";

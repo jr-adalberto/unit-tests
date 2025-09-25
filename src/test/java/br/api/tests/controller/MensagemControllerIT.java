@@ -56,7 +56,7 @@ public class MensagemControllerIT {
         }
 
         @Test
-        void deveGerarExecao_QuandoRegistrarMensagem_PayloadXML() {
+        void deveGerarExecaoQuandoRegistrarMensagemPayloadXML() {
             String xmlPayload = "<mensagem><conteudo>Teste</conteudo><usuario>Ana</usuario></mensagem>";
             given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -86,7 +86,7 @@ public class MensagemControllerIT {
         }
 
         @Test
-        void deveGerarExecao_QuandoBuscarMensagem_IdNaoExiste() {
+        void deveGerarExecaoQuandoBuscarMensagemIdNaoExiste() {
             var id = "bd0e31fd-58b7-44e0-bbff-cc0aaf817b9";
             when()
                     .get("/mensagens/{id}", id)
@@ -117,7 +117,7 @@ public class MensagemControllerIT {
         }
 
         @Test
-        void deveGerarExecao_QuandoAlterarMensagem_IdNaoExiste() {
+        void deveGerarExecaoQuandoAlterarMensagemIdNaoExiste() {
             var id = UUID.fromString("4ff2f92d-c45d-4b5b-b31a-dbd55223457");
             var mensagem = Mensagem.builder()
                     .id(id)
@@ -137,7 +137,7 @@ public class MensagemControllerIT {
         }
 
         @Test
-        void deveGerarExcecao_QuandoAlterarMensagem_IdDaMensagemNovaApresentaValorDiferente() {
+        void deveGerarExcecaoQuandoAlterarMensagemIdDaMensagemNovaApresentaValorDiferente() {
             var id = UUID.fromString("4ff2f92d-c45d-4b5b-b31a-dbd552234574");
             var mensagem = Mensagem.builder()
                     .id(UUID.fromString("4ff2f92d-c45d-4b5b-b31a-dbd55223457"))
@@ -157,7 +157,7 @@ public class MensagemControllerIT {
         }
 
         @Test
-        void deveGerarExecao_QuandoPayloadMensagem_PayloadXML() {
+        void deveGerarExecaoQuandoPayloadMensagemPayloadXML() {
             var id = UUID.fromString("4ff2f92d-c45d-4b5b-b31a-dbd552234574");
             String xmlPayload = "<mensagem><id>4ff2f92d-c45d-4b5b-b31a-dbd552234574</id><conteudo>Teste</conteudo><usuario>Ana</usuario></mensagem>";
 
@@ -187,7 +187,7 @@ public class MensagemControllerIT {
             }
 
             @Test
-            void deveGerarExecao_QuandoRemoverMensagem_IdNaoExiste() {
+            void deveGerarExecaoQuandoRemoverMensagemIdNaoExiste() {
                 var id = "5f789b39-4295-42c1-a65b-cfca5b987db3";
                 given()
                         .filter(new AllureRestAssured())
@@ -215,7 +215,7 @@ public class MensagemControllerIT {
                 }
 
                 @Test
-                void devePermitirListarMensagens_QuandoNaoInformadoPaginacao() {
+                void devePermitirListarMensagensQuandoNaoInformadoPaginacao() {
                     when()
                             .get("/mensagens")
                             .then()
