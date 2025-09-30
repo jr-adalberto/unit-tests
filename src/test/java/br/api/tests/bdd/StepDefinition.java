@@ -2,6 +2,7 @@ package br.api.tests.bdd;
 
 import br.api.tests.model.Mensagem;
 import br.api.tests.utils.MensagemHelper;
+import io.cucumber.java.PendingException;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
@@ -16,10 +17,8 @@ import static org.hamcrest.Matchers.equalTo;
 public class StepDefinition {
 
     private Response response;
-
     private Mensagem mensagemResponse;
-
-    private String ENDPOINT_MENSAGENS = "http://localhost:8080/mensagens";
+    private final String ENDPOINT_MENSAGENS = "http://localhost:8080/mensagens";
 
     @Quando("submeter uma nova mensagem")
     public Mensagem submeterNovaMensagem() {
@@ -35,7 +34,7 @@ public class StepDefinition {
     public void mensagemRegistradaComSucesso() {
         response.then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body(matchesJsonSchemaInClasspath("./schemas/MensagemResponseSchema.json"));
+                .body(matchesJsonSchemaInClasspath("schemas/MensagemResponseSchema.json"));
     }
 
     @Dado("que uma mensagem já foi publicada")
@@ -48,14 +47,14 @@ public class StepDefinition {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/mensagens/{id}", mensagemResponse.getId().toString());
+                .get(ENDPOINT_MENSAGENS + "/{id}", mensagemResponse.getId().toString());
     }
 
     @Então("a mensagem é exibida com sucesso")
     public void mensagemExibidaComSucesso() {
         response.then()
                 .statusCode(HttpStatus.OK.value())
-                .body(matchesJsonSchemaInClasspath("./schemas/MensagemResponseSchema.json"));
+                .body(matchesJsonSchemaInClasspath("schemas/MensagemResponseSchema.json"));
     }
 
     @Quando("requisitar a lista da mensagem")
@@ -63,14 +62,15 @@ public class StepDefinition {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get("/mensagens");
+                .get(ENDPOINT_MENSAGENS);
     }
 
     @Então("as mensagens são exibidas com sucesso")
     public void mensagensSaoExibidasComSucesso() {
         response.then()
                 .statusCode(HttpStatus.OK.value())
-                .body(matchesJsonSchemaInClasspath("./schemas/MensagemPaginationSchema.json"))
+                // CORREÇÃO 1: Removido o "./" do caminho do schema
+                .body(matchesJsonSchemaInClasspath("schemas/MensagemPaginationSchema.json"))
                 .body("number", equalTo(0))
                 .body("size", equalTo(10));
     }
@@ -82,14 +82,14 @@ public class StepDefinition {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(mensagemResponse)
                 .when()
-                .put("/mensagens/{id}", mensagemResponse.getId().toString());
+                .put(ENDPOINT_MENSAGENS + "/{id}", mensagemResponse.getId().toString());
     }
 
     @Então("a mensagem é atualizada com sucesso")
     public void mensagemAtualizadaComSucesso() {
         response.then()
                 .statusCode(HttpStatus.OK.value())
-                .body(matchesJsonSchemaInClasspath("./schemas/MensagemResponseSchema.json"));
+                .body(matchesJsonSchemaInClasspath("schemas/MensagemResponseSchema.json"));
     }
 
     @Quando("requisitar a exclusão da mensagem")
@@ -97,13 +97,18 @@ public class StepDefinition {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/mensagens/{id}", mensagemResponse.getId().toString());
+                .delete(ENDPOINT_MENSAGENS + "/{id}", mensagemResponse.getId().toString());
     }
 
     @Então("a mensagem é removida com sucesso")
     public void mensagemRemovidaComSucesso() {
         response.then()
                 .statusCode(HttpStatus.OK.value())
-                .body(equalTo("mensagem removida"));
+                .body(equalTo("Mensagem removida com sucesso."));
+    }
+
+    @Dado("passo em desenvolvimento")
+    public void passo_em_desenvolvimento() {
+        throw new PendingException();
     }
 }
