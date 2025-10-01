@@ -1,10 +1,10 @@
 # 🧪 Unit Tests com JUnit 5 e Mockito
 
-![Java](https://img.shields.io/badge/Java-17-blue)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
-![JUnit](https://img.shields.io/badge/JUnit-5-red)
-![Mockito](https://img.shields.io/badge/Mockito-Mocking-lightgrey)
-![Status](https://img.shields.io/badge/Status-Em%20andamento-blue)
+![Java](https://img.shields.io/badge/Java-17-blue )
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen )
+![JUnit](https://img.shields.io/badge/JUnit-5-red )
+![Mockito](https://img.shields.io/badge/Mockito-Mocking-lightgrey )
+![Status](https://img.shields.io/badge/Status-Em%20andamento-blue )
 
 > Ambiente de estudo e prática de **testes unitários em Java**, utilizando **JUnit 5** e **Mockito**, com foco em boas práticas e isolamento de dependências.
 
@@ -41,6 +41,21 @@ O foco principal é:
 
 ---
 
+## 🧪 Como Executar os Testes
+
+```sh
+  # 1. Testes Unitarios
+mvn test
+```
+```sh
+# 2. Testes Integrados:
+mvn test -P integration-test
+```
+```sh
+# 3. Testes do Sistema
+mvn test -P system-test
+```
+---
 ## 🚀 Como Executar o Projeto
 
 **Pré-requisitos:**
@@ -48,14 +63,14 @@ O foco principal é:
 - Maven 3.6.3+
 - IDE como IntelliJ, Eclipse ou VS Code com suporte a Maven/Java
 
-**Passo a passo:**
-
-```bash
+```sh
 # 1. Clone o repositório
-git clone [https://github.com/jr-adalberto/unit-tests.git](https://github.com/jr-adalberto/unit-tests.git)
+git clone https://github.com/jr-adalberto/unit-tests.git
 
 # 2. Navegue até o diretório do projeto
 cd unit-tests
 
-# 3. Execute os testes com Maven
-mvn test
+# 3. Execute a aplicação principal
+mvn spring-boot:run
+````
+---
