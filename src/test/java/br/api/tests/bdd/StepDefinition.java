@@ -7,6 +7,7 @@ import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 import io.restassured.response.Response;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -16,9 +17,15 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class StepDefinition {
 
+    @LocalServerPort
+    private int port;
+
     private Response response;
     private Mensagem mensagemResponse;
-    private final String ENDPOINT_MENSAGENS = "http://localhost:8080/mensagens";
+
+    private String getEndpoint() {
+        return "http://localhost:" + port + "/mensagens";
+    }
 
     @Quando("submeter uma nova mensagem")
     public Mensagem submeterNovaMensagem() {
@@ -26,7 +33,8 @@ public class StepDefinition {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(mensagemRequest)
-                .when().post(ENDPOINT_MENSAGENS);
+                .when()
+                .post(getEndpoint());
         return response.then().extract().as(Mensagem.class);
     }
 
@@ -34,7 +42,7 @@ public class StepDefinition {
     public void mensagemRegistradaComSucesso() {
         response.then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body(matchesJsonSchemaInClasspath("schemas/MensagemResponseSchema.json"));
+                .body(matchesJsonSchemaInClasspath("schemas/mensagem.schema.json"));
     }
 
     @Dado("que uma mensagem já foi publicada")
@@ -47,14 +55,14 @@ public class StepDefinition {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get(ENDPOINT_MENSAGENS + "/{id}", mensagemResponse.getId().toString());
+                .get(getEndpoint() + "/{id}", mensagemResponse.getId().toString());
     }
 
     @Então("a mensagem é exibida com sucesso")
     public void mensagemExibidaComSucesso() {
         response.then()
                 .statusCode(HttpStatus.OK.value())
-                .body(matchesJsonSchemaInClasspath("schemas/MensagemResponseSchema.json"));
+                .body(matchesJsonSchemaInClasspath("schemas/mensagem.schema.json"));
     }
 
     @Quando("requisitar a lista da mensagem")
@@ -62,15 +70,14 @@ public class StepDefinition {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get(ENDPOINT_MENSAGENS);
+                .get(getEndpoint());
     }
 
     @Então("as mensagens são exibidas com sucesso")
     public void mensagensSaoExibidasComSucesso() {
         response.then()
                 .statusCode(HttpStatus.OK.value())
-                // CORREÇÃO 1: Removido o "./" do caminho do schema
-                .body(matchesJsonSchemaInClasspath("schemas/MensagemPaginationSchema.json"))
+                .body(matchesJsonSchemaInClasspath("schemas/mensagem.page.schema.json"))
                 .body("number", equalTo(0))
                 .body("size", equalTo(10));
     }
@@ -82,14 +89,14 @@ public class StepDefinition {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(mensagemResponse)
                 .when()
-                .put(ENDPOINT_MENSAGENS + "/{id}", mensagemResponse.getId().toString());
+                .put(getEndpoint() + "/{id}", mensagemResponse.getId().toString());
     }
 
     @Então("a mensagem é atualizada com sucesso")
     public void mensagemAtualizadaComSucesso() {
         response.then()
                 .statusCode(HttpStatus.OK.value())
-                .body(matchesJsonSchemaInClasspath("schemas/MensagemResponseSchema.json"));
+                .body(matchesJsonSchemaInClasspath("schemas/mensagem.schema.json"));
     }
 
     @Quando("requisitar a exclusão da mensagem")
@@ -97,7 +104,7 @@ public class StepDefinition {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete(ENDPOINT_MENSAGENS + "/{id}", mensagemResponse.getId().toString());
+                .delete(getEndpoint() + "/{id}", mensagemResponse.getId().toString());
     }
 
     @Então("a mensagem é removida com sucesso")
@@ -109,6 +116,6 @@ public class StepDefinition {
 
     @Dado("passo em desenvolvimento")
     public void passo_em_desenvolvimento() {
-        throw new PendingException();
+        throw new PendingException("TODO: Cenario em desenvolvimento");
     }
 }
