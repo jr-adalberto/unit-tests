@@ -4,6 +4,8 @@ import br.api.tests.exception.MensagemNotFoundException;
 import br.api.tests.model.Mensagem;
 import br.api.tests.repository.MensagemRepository;
 import br.api.tests.utils.MensagemHelper;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Severity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -44,6 +46,7 @@ class MensagemServiceTest {
     }
 
     @Nested
+    @Severity(SeverityLevel.BLOCKER)
     class RegistrarMensagem {
         @Test
         void devePermitirRegistrarMensagem() {
@@ -64,6 +67,7 @@ class MensagemServiceTest {
     }
 
     @Nested
+    @Severity(SeverityLevel.CRITICAL)
     class BuscarMensagem {
         @Test
         void devePermitirBuscarMensagem() {
@@ -80,6 +84,7 @@ class MensagemServiceTest {
         }
 
         @Test
+        @Severity(SeverityLevel.MINOR)
         void deveGerarExcecaoQuandoBuscarMensagemIdNaoExiste() {
             var id = UUID.fromString("bf416988-aa16-4bff-9dc2-597782fe06dd");
             when(mensagemRepository.findById(id))
