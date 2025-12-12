@@ -1,4 +1,5 @@
-FROM openjdk:17
+FROM eclipse-temurin:17-jdk-focal
 WORKDIR /app
-COPY target/*jar application.jar
-ENTRYPOINT ["java","-jar","application.jar"]
+COPY target/*.jar application.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "application.jar"]

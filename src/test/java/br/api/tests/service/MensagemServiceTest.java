@@ -4,8 +4,8 @@ import br.api.tests.exception.MensagemNotFoundException;
 import br.api.tests.model.Mensagem;
 import br.api.tests.repository.MensagemRepository;
 import br.api.tests.utils.MensagemHelper;
-import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -52,7 +52,11 @@ class MensagemServiceTest {
         void devePermitirRegistrarMensagem() {
             var mensagem = MensagemHelper.gerarMensagem();
             when(mensagemRepository.save(any(Mensagem.class)))
-                    .thenAnswer(i -> i.getArgument(0));
+                    .thenAnswer(invocation -> {
+                        Mensagem mensagemSalva = invocation.getArgument(0);
+                        mensagemSalva.setId(UUID.randomUUID());
+                        return mensagemSalva;
+                    });
 
             var mensagemRegistrada = mensagemService
                     .registrarMensagem(mensagem);
@@ -198,7 +202,7 @@ class MensagemServiceTest {
                     MensagemHelper.gerarMensagem(),
                     MensagemHelper.gerarMensagem()
             ));
-            when(mensagemRepository.listarMensagens(any(Pageable.class)))
+            when(mensagemRepository.findAll(any(Pageable.class)))
                     .thenReturn(listaMensagem);
 
             var resultadoObtido = mensagemService.listasMensagens(Pageable.unpaged());
@@ -210,7 +214,8 @@ class MensagemServiceTest {
                                 .isNotNull()
                                 .isInstanceOf(Mensagem.class);
                     });
-            verify(mensagemRepository, times(1)).listarMensagens(any(Pageable.class));
+            verify(mensagemRepository, times(1)).findAll(any(Pageable.class));
         }
+
     }
 }

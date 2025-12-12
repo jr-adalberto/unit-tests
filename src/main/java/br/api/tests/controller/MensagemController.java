@@ -25,7 +25,6 @@ public class MensagemController {
 
     private final MensagemService mensagemService;
 
-    @SuppressWarnings("checkstyle:MissingJavadocMethod")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Mensagem> registrarMensagem(@RequestBody Mensagem mensagem) {
@@ -36,12 +35,16 @@ public class MensagemController {
     @SuppressWarnings({"checkstyle:Indentation", "checkstyle:MissingJavadocMethod"})
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> buscarMensagem(@PathVariable String id) {
-        var uuid = UUID.fromString(id);
         try {
+            var uuid = UUID.fromString(id);
             var mensagem = mensagemService.buscarMensagem(uuid);
             return new ResponseEntity<>(mensagem, HttpStatus.OK);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("O formato do ID fornecido é inválido.");
+
         } catch (MensagemNotFoundException mensagemNotFoundException) {
-            return new ResponseEntity<>("ID inválido ou mensagem não encontrada.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(mensagemNotFoundException.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -57,32 +60,37 @@ public class MensagemController {
         return new ResponseEntity<>(mensagens, HttpStatus.OK);
     }
 
-    @SuppressWarnings({"checkstyle:Indentation", "checkstyle:MissingJavadocMethod"})
-    @PutMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> alterarMensagem(@PathVariable String id, @RequestBody Mensagem mensagemAtualizada) {
-        var uuid = UUID.fromString(id);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> alterarMensagem(
+            @PathVariable String id,
+            @RequestBody Mensagem mensagemAtualizada) {
+
         try {
+            var uuid = UUID.fromString(id);
             var mensagemAlterada = mensagemService.alterarMensagem(uuid, mensagemAtualizada);
             return new ResponseEntity<>(mensagemAlterada, HttpStatus.OK);
+
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("O formato do ID fornecido é inválido.");
+
         } catch (MensagemNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> removerMensagem(@PathVariable String id) {
-        var uuid = UUID.fromString(id);
         try {
+            var uuid = UUID.fromString(id);
             mensagemService.removerMensagem(uuid);
             return new ResponseEntity<>("Mensagem removida com sucesso.", HttpStatus.OK);
-        } catch (MensagemNotFoundException mensagemNotFoundException) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(mensagemNotFoundException.getMessage());
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("O formato do ID fornecido é inválido.");
+
+        } catch (MensagemNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
 }

@@ -19,7 +19,6 @@ public class MensagemServiceImpl implements MensagemService {
 
     @Override
     public Mensagem registrarMensagem(Mensagem mensagem) {
-        mensagem.setId(UUID.randomUUID());
         return mensagemRepository.save(mensagem);
     }
 
@@ -32,17 +31,21 @@ public class MensagemServiceImpl implements MensagemService {
     @Override
     public Mensagem alterarMensagem(UUID id, Mensagem mensagemAtualizada) {
         var mensagem = buscarMensagem(id);
+
         if (mensagemAtualizada.getId() != null && !mensagem.getId().equals(mensagemAtualizada.getId())) {
             throw new IllegalArgumentException("mensagem não apresenta o ID correto");
         }
-        mensagem.setDataAlteracao(LocalDateTime.now());
+
         mensagem.setConteudo(mensagemAtualizada.getConteudo());
+        mensagem.setUsuario(mensagemAtualizada.getUsuario());
+        mensagem.setDataAlteracao(LocalDateTime.now());
+
         return mensagemRepository.save(mensagem);
     }
 
     @Override
     public boolean removerMensagem(UUID id) {
-        var mensagem = buscarMensagem(id);
+        buscarMensagem(id);
         mensagemRepository.deleteById(id);
         return true;
     }
@@ -52,13 +55,8 @@ public class MensagemServiceImpl implements MensagemService {
         return null;
     }
 
-
-    private String semNada = "";
-
     @Override
     public Page<Mensagem> listasMensagens(Pageable pageable) {
-        return mensagemRepository.listarMensagens(pageable);
+        return mensagemRepository.findAll(pageable);
     }
-
-
 }

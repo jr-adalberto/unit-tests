@@ -91,11 +91,6 @@
         </dependency>
         <dependency>
             <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-rest-assured</artifactId>
-            <version>2.23.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>
             <version>2.23.0</version>
             <scope>test</scope>
@@ -105,6 +100,18 @@
             <artifactId>allure-rest-assured</artifactId>
             <version>2.24.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.gatling</groupId>
+            <artifactId>gatling-app</artifactId>
+            <version>3.11.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.gatling.highcharts</groupId>
+            <artifactId>gatling-charts-highcharts</artifactId>
+            <version>3.11.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -113,12 +120,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                   <excludes>
-                       <exclude>
-                           <groupId>org.projectlombok</groupId>
-                           <artifactId>lombok</artifactId>
-                       </exclude>
-                   </excludes>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -133,7 +140,8 @@
                         <exclude>**/bdd/**</exclude>
                     </excludes>
                     <properties>
-                        <junit.jupiter.extesions.autodetection.enabled>true</junit.jupiter.extesions.autodetection.enabled>
+                        <junit.jupiter.extesions.autodetection.enabled>true
+                        </junit.jupiter.extesions.autodetection.enabled>
                     </properties>
                 </configuration>
                 <dependencies>
@@ -176,12 +184,27 @@
                             <includes combine.self="override">
                                 <include>**/CucumberTest.java</include>
                             </includes>
-                            <excludes combine.self="override" />
+                            <excludes combine.self="override"/>
                             <properties>
                                 <configurationParameters>
                                     cucumber.junit-platform.naming-strategy=long
                                 </configurationParameters>
                             </properties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>performance-test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.gatling</groupId>
+                        <artifactId>gatling-maven-plugin</artifactId>
+                        <version>4.9.0</version>
+                        <configuration>
+                            <simulationClass>br.api.tests.performance.PerformanceSimulation</simulationClass>
                         </configuration>
                     </plugin>
                 </plugins>

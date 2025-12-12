@@ -2,10 +2,7 @@ package br.api.tests.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -26,7 +24,8 @@ import java.util.UUID;
 public class Mensagem {
 
     @Id
-    @Column(name = "id", columnDefinition = "VARCHAR(36)")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(updatable = false, nullable = false)
     private UUID id;
 
     @NotEmpty(message = "usuário não pode estar vazio")
@@ -39,17 +38,17 @@ public class Mensagem {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSS")
     private LocalDateTime dataCriacao;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSS")
     private LocalDateTime dataAlteracao;
 
     @Builder.Default
     private int gostei = 0;
 
-    @PrePersist
-    public void prePersist() {
-        var timestamp = LocalDateTime.now();
-        dataCriacao = timestamp;
-        dataAlteracao = timestamp;
-    }
+//    @PrePersist
+//    public void prePersist() {
+//        var timestamp = LocalDateTime.now();
+//        dataCriacao = timestamp;
+//        dataAlteracao = timestamp;
+//    }
 }
