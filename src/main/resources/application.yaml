@@ -5,7 +5,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:password}
-    url: jdbc:postgresql://localhost:5432/backend
+    url: jdbc:postgresql://database:5432/backend
   jpa:
     hibernate:
       ddl-auto: update

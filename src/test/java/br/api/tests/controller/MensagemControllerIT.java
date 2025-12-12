@@ -91,7 +91,7 @@ public class MensagemControllerIT {
             when()
                     .get("/mensagens/{id}", id)
                     .then()
-                    .statusCode(HttpStatus.BAD_REQUEST.value());
+                    .statusCode(HttpStatus.NOT_FOUND.value());
         }
     }
 

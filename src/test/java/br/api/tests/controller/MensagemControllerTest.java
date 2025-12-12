@@ -111,7 +111,7 @@ public class MensagemControllerTest {
                     .thenThrow(MensagemNotFoundException.class);
             // Act & Assert
             mockMvc.perform(get("/mensagens/{id}", id))
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isNotFound());
             verify(mensagemService, times(1))
                     .buscarMensagem(any(UUID.class));
         }
